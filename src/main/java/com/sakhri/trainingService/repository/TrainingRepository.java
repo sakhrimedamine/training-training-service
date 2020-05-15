@@ -8,4 +8,5 @@ import com.sakhri.trainingService.model.Training;
 @Repository
 public interface TrainingRepository extends JpaRepository<Training, Long>{
 
+	public Training findByTrainingId(String trainingId);
 }

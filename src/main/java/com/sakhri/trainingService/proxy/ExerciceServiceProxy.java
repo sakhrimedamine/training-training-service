@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 //@FeignClient(name="exercise-service",url="localhost:8082")
 //@FeignClient(name="exercise-service")
-@FeignClient(name="netflix-zuul-api-gateway-server")
+@FeignClient(name="netflix-zuul-api-gateway-server",fallbackFactory = ExerciceServiceProxyFactory.class)
 @RibbonClient(name="exercice-service")
 public interface ExerciceServiceProxy {
 	

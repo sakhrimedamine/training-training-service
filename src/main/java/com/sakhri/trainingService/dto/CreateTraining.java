@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class TrainingDto implements Serializable{
+public class CreateTraining implements Serializable{
 		
-	private static final long serialVersionUID = 8434182099458320367L;
+	private static final long serialVersionUID = 5051804053618988620L;
 
-	private String trainingId;
-
+	private Long id;
+	
 	@NotBlank(message="Le nom du training ne peut pas etre vide")
 	private String name;
 		

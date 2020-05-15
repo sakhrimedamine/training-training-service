@@ -1,9 +1,6 @@
 package com.sakhri.trainingService.controller;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -15,9 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
-import com.sakhri.trainingService.dto.ApiResponseDto;
+import com.sakhri.trainingService.dto.CreateTraining;
 import com.sakhri.trainingService.dto.TrainingDto;
 import com.sakhri.trainingService.service.TrainingService;
 
@@ -36,32 +32,30 @@ public class TrainingController {
 
 	
 	@PostMapping
-	public ResponseEntity<ApiResponseDto> createUser(@Valid @RequestBody(required = true) TrainingDto trainingDto,
-			WebRequest request) {
-		log.info("Request for Creating a training with DTO {}", trainingDto);
-		trainingService.createTraining(trainingDto);
-		return ResponseEntity.ok(ApiResponseDto.builder()
-								.message("Training successfully created")
-								.timestamp(LocalDateTime.now())
-								.details(request.getDescription(false))
-								.build());
+	public ResponseEntity<Boolean> createTraining(@Valid @RequestBody(required = true) 
+						CreateTraining createTraining) {
+		
+		log.info("Request for Creating a training with DTO {}", createTraining);
+		
+		TrainingDto trainingDto = modelMapper.map(createTraining, TrainingDto.class);
+
+		final boolean isCreated = trainingService.createTraining(trainingDto);
+		
+		log.info("Training succesfully created  {}", isCreated);
+
+		return ResponseEntity.ok(isCreated);
 	}
 	
 	
 	@GetMapping
-	public ResponseEntity<List<TrainingDto>> getAll() {
-		log.info("Request for getting all training ");
-		return ResponseEntity.ok(trainingService.getAll()
-				.stream()
-				.map(tr ->  {
-					TrainingDto dto = modelMapper.map(tr, TrainingDto.class);
-					List<Long> asList = Arrays.asList(tr.getExercicesId().split(","))
-												.stream()
-												.map(x -> Long.parseLong(x))
-												.collect(Collectors.toList());
-					dto.setExercicesId(asList);
-					return dto;
-				})
-				.collect(Collectors.toList()));
+	public ResponseEntity<List<TrainingDto>> getAllTraining() {
+		
+		log.info("Request for getting all trainings ");
+		
+		final List<TrainingDto> allTrainings = trainingService.getAll();
+		
+		log.info("All trainings {}", allTrainings);
+
+		return ResponseEntity.ok(allTrainings);
 	}
 }
